@@ -1,11 +1,11 @@
-const { TestWatcher } = require('jest');
-const Player = require('../lib/Player');
+const Player = require('../lib/Player.js');
+const Player = require('../lib/Potion.js');
+
+jest.mock('../lib/Potion.js');
 
 Test('creates a player object',() =>{
     const player = new Player('Dave');
 
-    player.getStats();
-    player.getInventory();
     expect(player.name).toBe('Dave');
     expect(player.health).toEqual(expect.any(Number));
     expect(player.strength).toEqual(expect.any(Number));
@@ -31,4 +31,30 @@ test('get inventory from player or returns false', () =>{
     Player.inventory = [];
 
     expect(player.getInventory()).toEqual(false);
+});
+test("gets player's health value", () =>{
+    const player = new Player('Dave');
+
+    expect(player.getHealth()).toEqual(expect.stringContaining(player.health.toString()));  
+});
+test('checks if player is alive or not', () =>{
+    const player = new Player('Dave');
+
+    expect(player.isAlive()).toBeTruthy();
+
+    player.health = 0;
+
+    expect(player.isAlive()).toBeFalsy();
+});
+test("subtract from player's health", () =>{
+    const player = new Player('Dave');
+    const oldHealth = player.health;
+
+    player.reduceHealth(5);
+
+    expect(player.health).toBe(oldHealth -5);
+
+    player.reduceHealth(99999);
+
+    expect(player.health).toBe(0);
 });
